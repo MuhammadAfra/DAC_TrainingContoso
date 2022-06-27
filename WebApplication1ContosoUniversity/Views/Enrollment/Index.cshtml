@@ -1,0 +1,67 @@
+﻿
+@model PagedList.IPagedList<WebApplication1ContosoUniversity.Models.Enrollment>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Enrollments";
+}
+
+<h2>Enrollments</h2>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@using (Html.BeginForm("Index", "Enrollment", FormMethod.Get))
+{
+    <p>
+         Find by Grade : @Html.TextBox("SearchStringGrade", ViewBag.CurrentFilterGrade as string)
+         <input type="submit" value="Search" />
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Title", "Index", new { sortOrder = ViewBag.TitleSortParm, currentFilterGrade = ViewBag.CurrentFilterGrade })
+        </th>
+        <th>
+            @Html.ActionLink("Last Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilterGrade = ViewBag.CurrentFilterGrade })
+        </th>
+        <th>
+            @Html.ActionLink("Grade", "Index", new { sortOrder = ViewBag.GradeSortParm, currentFilterGrade = ViewBag.CurrentFilterGrade })
+        </th>
+        <th>
+            Action
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Course.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Grade)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.EnrollmentID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.EnrollmentID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.EnrollmentID })
+            </td>
+        </tr>
+    }
+
+</table>
+</br>
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new
+    {
+        page,
+        sortOrder = ViewBag.CurrentSort,
+        currentFilterGrade = ViewBag.CurrentFilterGrade
+    }))
